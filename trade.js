@@ -8,12 +8,10 @@ app.use(express.json());
 app.post('/api/trade', async (req, res) => {
   const { action, symbol, side, quantity, apiKey, apiSecret, lastPrice } = req.body;
 
-  // التحقق من وجود المفاتيح
   if (!apiKey || !apiSecret) {
     return res.status(400).json({ error: 'Missing API keys' });
   }
 
-  // جلب السعر الحالي
   if (action === 'check') {
     try {
       const priceRes = await fetch(`https://fapi.binance.com/fapi/v1/ticker/price?symbol=${symbol}`);
@@ -29,7 +27,6 @@ app.post('/api/trade', async (req, res) => {
     }
   }
 
-  // تنفيذ أمر شراء أو بيع
   if (action === 'execute') {
     if (!symbol || !side || !quantity) {
       return res.status(400).json({ error: 'Missing order parameters' });
@@ -49,7 +46,6 @@ app.post('/api/trade', async (req, res) => {
     }
   }
 
-  // إذا لم يتم التعرف على الإجراء
   res.status(400).json({ error: 'Invalid action' });
 });
 
